@@ -12,12 +12,21 @@ class RuuviTag extends EventEmitter {
 const ruuvi = module.exports = {
   findTags: () => new Promise((resolve, reject) => {
 
-    let foundTags = [];
+    const foundTags = [];
 
     ebs.on('found', data => {
       if (!foundTags.find(tag => tag.id === data.id)) {
         foundTags.push(new RuuviTag(data));
       }
+    });
+
+    // listen to "updated" events
+    ebs.on('updated', data => {
+      const correspondingTag = foundTags.find(tag => tag.id === data.id);
+      if (!correspondingTag) {
+        return;
+      }
+      correspondingTag.emit('updated', data);
     });
 
     setTimeout(() => {
@@ -28,7 +37,7 @@ const ruuvi = module.exports = {
 
     }, 2500);
 
-    ebs.startScanning();
+    ebs.startScanning(true);
 
   }),
 

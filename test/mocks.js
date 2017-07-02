@@ -16,12 +16,17 @@ class EddystoneBeaconScannerMock extends EventEmitter {
   constructor() {
     super();
     this.tagsAvailable = false;
+    this.advertiseInterval = 1000;
   }
 
   startScanning() {
     if (this.tagsAvailable) {
       ruuviTags.forEach(tag => {
+        const self = this;
         this.emit('found', { id: tag.id, url: generateRandomUrl() });
+        setInterval(() => {
+          self.emit('updated', { id: tag.id, url: generateRandomUrl() });
+        }, this.advertiseInterval);
       });
     }
   }

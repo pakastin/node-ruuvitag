@@ -8,6 +8,8 @@ const catchFail = done => { return (err) => done.fail(err); };
 
 describe('module ruuvi', () => {
 
+  const findTagsScanTime = 2500;
+
   let ruuvi;
 
   beforeEach(() => {
@@ -37,7 +39,7 @@ describe('module ruuvi', () => {
           done();
         })
         .catch(catchFail(done));
-      jasmine.clock().tick(5000);
+      jasmine.clock().tick(findTagsScanTime);
     });
 
     it('should return a promise which is rejected if no tags were found', (done) => {
@@ -48,8 +50,56 @@ describe('module ruuvi', () => {
           expect(err.message).toBe('No beacons found');
           done();
         });
-      jasmine.clock().tick(5000);
+      jasmine.clock().tick(findTagsScanTime);
     });
+
+    afterEach(function () {
+      jasmine.clock().uninstall();
+    });
+  });
+
+  describe('class RuuviTag', () => {
+
+    let tags;
+
+    beforeEach((done) => {
+      jasmine.clock().install();
+      ruuvi.findTags()
+        .then(result => {
+          tags = result;
+          done();
+        })
+        .catch(err => done.fail(err));
+      jasmine.clock().tick(findTagsScanTime);
+    });
+
+    describe('instantiated object', () => {
+
+      it('should have property "id"', () => {
+        expect("id" in tags[0]).toBeTruthy();
+      });
+
+      it('should emit "updated" when ruuvitag signal is received', (done) => {
+        let emitted = false;
+        tags[0].on('updated', data => emitted = true);
+        setTimeout(() => {
+          expect(emitted).toBeTruthy();
+          done();
+        }, eddystoneBeaconScannerMock.mock.advertiseInterval);
+        jasmine.clock().tick(eddystoneBeaconScannerMock.mock.advertiseInterval);
+      });
+
+      it('should emit "updated" with sensor data', (done) => {
+        let receivedData;
+        tags[0].on('updated', data => receivedData = data);
+        setTimeout(() => {
+          expect("url" in receivedData).toBeTruthy();
+          done();
+        }, eddystoneBeaconScannerMock.mock.advertiseInterval);
+        jasmine.clock().tick(eddystoneBeaconScannerMock.mock.advertiseInterval);
+      });
+    });
+
 
     afterEach(function () {
       jasmine.clock().uninstall();
