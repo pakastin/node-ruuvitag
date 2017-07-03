@@ -13,7 +13,7 @@ function getReadings(buffer) {
   const dataFormat = buffer[0];
 
   return dataFormat === 2 || dataFormat === 4 ?
-    dataFormats.formats_2_and_4.parse(buffer) :
+    Object.assign({ dataFormat: dataFormat }, dataFormats.formats_2_and_4.parse(buffer)) :
     new Error('Unsupported data format: ' + dataFormat);
 }
 

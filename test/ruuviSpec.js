@@ -16,6 +16,7 @@ describe('module ruuvi', () => {
     mockery.enable();
     mockery.registerMock('eddystone-beacon-scanner', eddystoneBeaconScannerMock.mock);
     mockery.registerAllowable('../ruuvi');
+    mockery.registerAllowable('./parse');
     mockery.registerAllowable('events');
     eddystoneBeaconScannerMock.mock.enableTagFinding();
     ruuvi = require('../ruuvi');
@@ -97,6 +98,8 @@ describe('module ruuvi', () => {
             return done.fail('No data received');
           }
           expect("url" in receivedData).toBeTruthy();
+          expect("humidity" in receivedData).toBeTruthy();
+
           done();
         }, eddystoneBeaconScannerMock.mock.advertiseInterval);
         jasmine.clock().tick(eddystoneBeaconScannerMock.mock.advertiseInterval);

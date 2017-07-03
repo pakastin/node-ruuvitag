@@ -16,7 +16,9 @@ class RuuviTag extends EventEmitter {
         if (!(parsed instanceof Error)) {
           this.emit('updated', {
             url: data.url,
-            humidity: parsed.humidity
+            dataFormat: parsed.dataFormat,
+            humidity: parsed.humidity,
+            temperature: parsed.temperature
           });
         }
       }
