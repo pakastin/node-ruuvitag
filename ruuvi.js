@@ -1,5 +1,6 @@
 const ebs = require('eddystone-beacon-scanner');
 const EventEmitter = require('events').EventEmitter;
+const parser = require('./parse');
 
 class RuuviTag extends EventEmitter {
 
@@ -11,7 +12,13 @@ class RuuviTag extends EventEmitter {
     // listen to "updated" events
     this.beaconScanner.on('updated', data => {
       if (data.id === this.id) {
-        this.emit('updated', data);
+        const parsed = parser.parseUrl(data.url);
+        if (!(parsed instanceof Error)) {
+          this.emit('updated', {
+            url: data.url,
+            humidity: parsed.humidity
+          });
+        }
       }
     });
   }
