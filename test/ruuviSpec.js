@@ -93,13 +93,15 @@ describe('module ruuvi', () => {
         let receivedData;
         tags[0].on('updated', data => receivedData = data);
         setTimeout(() => {
+          if (!receivedData) {
+            return done.fail('No data received');
+          }
           expect("url" in receivedData).toBeTruthy();
           done();
         }, eddystoneBeaconScannerMock.mock.advertiseInterval);
         jasmine.clock().tick(eddystoneBeaconScannerMock.mock.advertiseInterval);
       });
     });
-
 
     afterEach(function () {
       jasmine.clock().uninstall();
