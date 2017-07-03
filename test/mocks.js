@@ -1,8 +1,9 @@
 const EventEmitter = require('events').EventEmitter;
 
 const generateRandomUrl = () => {
-  return 'https://ruu.vi/#' + new Buffer([ 1, 2, 3, 4, 5, 6, 7 ].map(item => Math.floor(Math.random() * 256)))
-      .toString('base64');
+  const dataFormat = 4;
+  const randomValues = [ 1, 2, 3, 4, 5 ].map(item => Math.floor(Math.random() * 256));
+  return 'https://ruu.vi/#' + Buffer.from([ dataFormat ].concat(randomValues)).toString('base64');
 };
 
 const ruuviTags = [
