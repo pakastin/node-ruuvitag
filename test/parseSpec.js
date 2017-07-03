@@ -1,6 +1,6 @@
 const parser = require('../parse');
 
-fdescribe('parse.js', () => {
+describe('parse.js', () => {
 
   const testUrl = 'https://ruu.vi/#ApgVAMAw';
 
@@ -22,4 +22,30 @@ fdescribe('parse.js', () => {
     done();
   });
 
+  it('should return error if url contains invalid data', (done) => {
+    const result = parser.parseUrl('https://ruu.vi/#foo');
+    if (!(result instanceof Error)) {
+      return done.fail('Should have got an error');
+    }
+    expect(result.message).toMatch(/invalid data/i);
+    done();
+  });
+
+  it('should return error if data format is unsupported', (done) => {
+    const result = parser.parseUrl('https://ruu.vi/#' + Buffer.from([5,6,7,8,9,10]).toString('base64'));
+    if (!(result instanceof Error)) {
+      return done.fail('Should have got an error');
+    }
+    expect(result.message).toMatch(/unsupported data format: 5/i);
+    done();
+  });
+
+  describe('parsing data formats 2 and 4', () => {
+    const result = parser.parseUrl(testUrl);
+    it('should parse humidity value', () => {
+      expect(result.humidity).toBe(76);
+    });
+  });
+  
+  
 });
