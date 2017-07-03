@@ -40,10 +40,16 @@ describe('parse.js', () => {
     done();
   });
 
-  describe('parsing data formats 2 and 4', () => {
-    const result = parser.parseUrl(testUrl);
+  describe('parsing data format 2', () => {
+    const result = parser.parseUrl(testUrl_dataFormat_2);
     it('should parse humidity value', () => {
       expect(result.humidity).toBe(76);
+    });
+    it('should parse temperature value', () => {
+      expect(result.temperature).toBe(21);
+    });
+    it('should parse pressure value', () => {
+      expect(result.pressure).toBe(992);
     });
   });
   

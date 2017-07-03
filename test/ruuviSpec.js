@@ -99,7 +99,6 @@ describe('module ruuvi', () => {
           }
           expect("url" in receivedData).toBeTruthy();
           expect("humidity" in receivedData).toBeTruthy();
-
           done();
         }, eddystoneBeaconScannerMock.mock.advertiseInterval);
         jasmine.clock().tick(eddystoneBeaconScannerMock.mock.advertiseInterval);

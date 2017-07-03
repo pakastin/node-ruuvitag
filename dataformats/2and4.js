@@ -11,7 +11,7 @@ module.exports = {
     return {
       humidity: buffer[1] / 2,
       temperature: unSign(buffer[2]),
-      pressure: undefined,
+      pressure: (buffer[4] * 256 + buffer[5] + 50000) / 100,
       id: undefined
     };
   }

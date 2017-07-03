@@ -18,7 +18,8 @@ class RuuviTag extends EventEmitter {
             url: data.url,
             dataFormat: parsed.dataFormat,
             humidity: parsed.humidity,
-            temperature: parsed.temperature
+            temperature: parsed.temperature,
+            pressure: parsed.pressure
           });
         }
       }
