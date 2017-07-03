@@ -5,9 +5,17 @@ function stripUrl(url) {
   return match ? match[1] : new Error('Invalid url');
 }
 
-function getReadings(buffer) {
+function getReadings(encodedData) {
+
+  function addPaddingIfNecessary(str) {
+    // if encoded data is truncated (data format 4), add some random padding
+    return str.length === 9 ? str + 'a==' : str;
+  }
+
+  const buffer = Buffer.from(addPaddingIfNecessary(encodedData), 'base64');
+
   // validate
-  if (buffer.length !== 6) {
+  if (buffer.length < 6 || buffer.length > 7) {
     return new Error('Invalid data');
   }
   const dataFormat = buffer[0];
@@ -27,5 +35,5 @@ that.parseUrl = url => {
 
   const encodedData = stripUrl(url);
 
-  return encodedData instanceof Error ? encodedData : getReadings(Buffer.from(encodedData, 'base64'));
+  return encodedData instanceof Error ? encodedData : getReadings(encodedData);
 };
