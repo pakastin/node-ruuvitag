@@ -1,7 +1,11 @@
 {
   "name": "node-ruuvitag",
-  "version": "0.0.1",
-  "description": "Read data from you Ruuvitag weather station",
+  "version": "0.1.0",
+  "engines": {
+    "node": ">6.0.0"
+  },
+  "repository": "https://github.com/Espesen/node-ruuvitag",
+  "description": "Read data from  RuuviTag weather station",
   "main": "index.js",
   "scripts": {
     "test": "gulp test"
