@@ -1,4 +1,5 @@
 const ebs = require('eddystone-beacon-scanner');
+const noble = require('noble');
 const EventEmitter = require('events').EventEmitter;
 const parser = require('./parse');
 
@@ -41,6 +42,19 @@ const ruuvi = module.exports = {
       }
     });
 
+    noble.on('discovered', peripheral => {
+      // is it a RuuviTag in high-precision sensor mode?
+      const data = peripheral.advertisement ? peripheral.advertisement.manufacturerData : undefined;
+      if (data && data[0] === 0x99 && data[1] === 0x04) {
+        if (!foundTags.find(tag => tag.id === data.id)) {
+          foundTags.push(new RuuviTag({
+            id: data.id,
+            noble: noble
+          }));
+        }
+      }
+    });
+
     setTimeout(() => {
       if (foundTags.length) {
         return resolve(foundTags);
@@ -50,6 +64,15 @@ const ruuvi = module.exports = {
     }, 2500);
 
     ebs.startScanning(true);
+
+    if (noble.state === 'poweredOn') {
+      noble.startScanning([], true);
+    }
+    else {
+      noble.once('stateChange', () => {
+        noble.startScanning([], true);
+      });
+    }
 
   }),
 

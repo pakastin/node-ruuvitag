@@ -2,6 +2,7 @@ const mockery = require('mockery');
 const sinon = require('sinon');
 const mocks = require('./mocks');
 const eddystoneBeaconScannerMock = mocks.eddystoneBeaconScannerMock;
+const nobleMock = mocks.nobleMock;
 const EventEmitter = require('events').EventEmitter;
 
 const catchFail = done => { return (err) => done.fail(err); };
@@ -15,6 +16,7 @@ describe('module ruuvi', () => {
   beforeEach(() => {
     mockery.enable();
     mockery.registerMock('eddystone-beacon-scanner', eddystoneBeaconScannerMock.mock);
+    mockery.registerMock('noble', nobleMock.mock);
     mockery.registerAllowable('../ruuvi');
     mockery.registerAllowable('./parse');
     mockery.registerAllowable('events');
@@ -26,6 +28,7 @@ describe('module ruuvi', () => {
 
     beforeEach(() => {
       jasmine.clock().install();
+      nobleMock.mock.initialize();
     });
 
     it('should return a promise which is resolved with an array of ruuviTag objects', (done) => {
