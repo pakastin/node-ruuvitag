@@ -8,7 +8,7 @@ const catchFail = done => { return (err) => done.fail(err); };
 
 describe('module ruuvi', () => {
 
-  const findTagsScanTime = 2500;
+  const findTagsScanTime = 5000;
 
   let ruuvi;
 

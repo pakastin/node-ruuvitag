@@ -47,7 +47,7 @@ const ruuvi = module.exports = {
       }
       reject(new Error('No beacons found'));
 
-    }, 2500);
+    }, 5000);
 
     ebs.startScanning(true);
 
