@@ -21,6 +21,7 @@ describe('module ruuvi', () => {
     mockery.registerAllowable('./parse');
     mockery.registerAllowable('events');
     eddystoneBeaconScannerMock.mock.enableTagFinding();
+    nobleMock.mock.enableTagFinding();
     ruuvi = require('../ruuvi');
   });
 
@@ -48,6 +49,7 @@ describe('module ruuvi', () => {
 
     it('should return a promise which is rejected if no tags were found', (done) => {
       eddystoneBeaconScannerMock.mock.disableTagFinding();
+      nobleMock.mock.disableTagFinding();
       ruuvi.findTags()
         .then(data => done.fail('Should have returned an error'))
         .catch(err => {

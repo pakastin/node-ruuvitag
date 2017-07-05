@@ -50,9 +50,11 @@ class NobleMock extends EventEmitter {
   constructor() {
     super();
     this.state = 'poweredOff';
+    this.tagsAvailable = false;
   }
 
   startScanning() {
+    if (!this.tagsAvailable) return;
     setTimeout(() => {
       ruuviTags.filter(tag => tag.dataFormat === 3).forEach(tag => {
         this.emit('discovered', { id: tag.id, advertisement: { manufacturerData: tag. manufacturerData }});
@@ -64,6 +66,14 @@ class NobleMock extends EventEmitter {
     setTimeout(() => {
       this.emit('stateChange');
     }, 500);
+  }
+
+  disableTagFinding() {
+    this.tagsAvailable = false;
+  }
+
+  enableTagFinding() {
+    this.tagsAvailable = true;
   }
 
 }
