@@ -53,7 +53,4 @@ const ruuvi = module.exports = {
 
   }),
 
-
-
-
 };
