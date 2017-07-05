@@ -49,7 +49,7 @@ class EddystoneBeaconScannerMock extends EventEmitter {
 class NobleMock extends EventEmitter {
   constructor() {
     super();
-    this.state = 'poweredOff';
+    this.state = 'unknown';
     this.tagsAvailable = false;
     this.advertiseInterval = 900;
   }
