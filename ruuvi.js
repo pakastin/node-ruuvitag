@@ -10,12 +10,12 @@ class RuuviTag extends EventEmitter {
     this.id = data.id;
     this.beaconScanner = data.beaconScanner;
 
-    //listen to "updated" and "discovered" events
-    this.beaconScanner.on('updated', this.onUpdatedOrDiscovered.bind(this));
-    this.beaconScanner.on('discovered', this.onUpdatedOrDiscovered.bind(this));
+    //listen to "updated" and "discover" events
+    this.beaconScanner.on('updated', this.onUpdatedOrDiscover.bind(this));
+    this.beaconScanner.on('discover', this.onUpdatedOrDiscover.bind(this));
   }
 
-  onUpdatedOrDiscovered(data) {
+  onUpdatedOrDiscover(data) {
     if (data.id === this.id) {
       if (data.advertisement && data.advertisement.manufacturerData) {
         // is data format 3
@@ -51,7 +51,7 @@ const ruuvi = module.exports = {
       }
     });
 
-    noble.on('discovered', peripheral => {
+    noble.on('discover', peripheral => {
       // is it a RuuviTag in high-precision sensor mode?
       const data = peripheral.advertisement ? peripheral.advertisement.manufacturerData : undefined;
       if (data && data[0] === 0x99 && data[1] === 0x04) {
@@ -83,6 +83,6 @@ const ruuvi = module.exports = {
       });
     }
 
-  }),
+  })
 
 };

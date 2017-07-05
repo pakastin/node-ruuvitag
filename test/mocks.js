@@ -58,7 +58,7 @@ class NobleMock extends EventEmitter {
     if (!this.tagsAvailable) return;
     setInterval(() => {
       ruuviTags.filter(tag => tag.dataFormat === 3).forEach(tag => {
-        this.emit('discovered', { id: tag.id, advertisement: { manufacturerData: tag. manufacturerData }});
+        this.emit('discover', { id: tag.id, advertisement: { manufacturerData: tag. manufacturerData }});
       });
     }, this.advertiseInterval);
   }
