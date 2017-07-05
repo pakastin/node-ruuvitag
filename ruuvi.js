@@ -10,21 +10,30 @@ class RuuviTag extends EventEmitter {
     this.id = data.id;
     this.beaconScanner = data.beaconScanner;
 
-    // listen to "updated" events
-    this.beaconScanner.on('updated', data => {
-      if (data.id === this.id) {
-        const parsed = parser.parseUrl(data.url);
-        if (!(parsed instanceof Error)) {
-          this.emit('updated', {
-            url: data.url,
-            dataFormat: parsed.dataFormat,
-            humidity: parsed.humidity,
-            temperature: parsed.temperature,
-            pressure: parsed.pressure
-          });
-        }
+    //listen to "updated" and "discovered" events
+    this.beaconScanner.on('updated', this.onUpdatedOrDiscovered.bind(this));
+    this.beaconScanner.on('discovered', this.onUpdatedOrDiscovered.bind(this));
+  }
+
+  onUpdatedOrDiscovered(data) {
+    if (data.id === this.id) {
+      if (data.advertisement && data.advertisement.manufacturerData) {
+        // is data format 3
+        return this.emit('updated', parser.parseManufacturerData(data.advertisement.manufacturerData));
       }
-    });
+
+      // is data format 2 or 4
+      const parsed = parser.parseUrl(data.url);
+      if (!(parsed instanceof Error)) {
+        this.emit('updated', {
+          url: data.url,
+          dataFormat: parsed.dataFormat,
+          humidity: parsed.humidity,
+          temperature: parsed.temperature,
+          pressure: parsed.pressure
+        });
+      }
+    }
   }
 }
 
@@ -46,10 +55,10 @@ const ruuvi = module.exports = {
       // is it a RuuviTag in high-precision sensor mode?
       const data = peripheral.advertisement ? peripheral.advertisement.manufacturerData : undefined;
       if (data && data[0] === 0x99 && data[1] === 0x04) {
-        if (!foundTags.find(tag => tag.id === data.id)) {
+        if (!foundTags.find(tag => tag.id === peripheral.id)) {
           foundTags.push(new RuuviTag({
-            id: data.id,
-            noble: noble
+            id: peripheral.id,
+            beaconScanner: noble
           }));
         }
       }

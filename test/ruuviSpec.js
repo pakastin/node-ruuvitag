@@ -70,6 +70,7 @@ describe('module ruuvi', () => {
 
     beforeEach((done) => {
       jasmine.clock().install();
+      nobleMock.mock.initialize();
       ruuvi.findTags()
         .then(result => {
           tags = result;
@@ -86,24 +87,26 @@ describe('module ruuvi', () => {
       });
 
       it('should emit "updated" when ruuvitag signal is received', (done) => {
-        let emitted = false;
-        tags[0].on('updated', data => emitted = true);
+        tags.forEach(tag => tag.on('updated', data => tag.hasEmitted = true));
         setTimeout(() => {
-          expect(emitted).toBeTruthy();
+          expect(tags.filter(tag => tag.hasEmitted).length).toBe(2);
           done();
         }, eddystoneBeaconScannerMock.mock.advertiseInterval);
         jasmine.clock().tick(eddystoneBeaconScannerMock.mock.advertiseInterval);
       });
 
       it('should emit "updated" with sensor data', (done) => {
-        let receivedData;
-        tags[0].on('updated', data => receivedData = data);
+        tags.forEach(tag => tag.on('updated', data => tag.receivedData = data));
         setTimeout(() => {
-          if (!receivedData) {
-            return done.fail('No data received');
+          if (tags.filter(tag => tag.receivedData).length !== 2) {
+            return done.fail('Some tags received no data');
           }
-          expect("url" in receivedData).toBeTruthy();
-          expect("humidity" in receivedData).toBeTruthy();
+          tags.forEach(tag => {
+            const data = tag.receivedData;
+            expect("humidity" in data).toBeTruthy();
+            expect("temperature" in data).toBeTruthy();
+          });
+
           done();
         }, eddystoneBeaconScannerMock.mock.advertiseInterval);
         jasmine.clock().tick(eddystoneBeaconScannerMock.mock.advertiseInterval);

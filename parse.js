@@ -37,3 +37,9 @@ that.parseUrl = url => {
 
   return encodedData instanceof Error ? encodedData : getReadings(encodedData);
 };
+
+that.parseManufacturerData = dataBuffer => {
+  // parses data format 3
+  // TODO!!!
+  return { humidity: 40, temperature: 30 };
+};
