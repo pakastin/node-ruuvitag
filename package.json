@@ -22,6 +22,7 @@
     "sinon": "^2.3.5"
   },
   "dependencies": {
-    "eddystone-beacon-scanner": "^3.0.0"
+    "eddystone-beacon-scanner": "^3.0.0",
+    "noble": "^1.8.1"
   }
 }
