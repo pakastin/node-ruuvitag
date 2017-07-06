@@ -52,7 +52,7 @@ const ruuvi = module.exports = {
     });
 
     noble.on('discover', peripheral => {
-      // is it a RuuviTag in high-precision sensor mode?
+      // is it a RuuviTag in RAW mode?
       const data = peripheral.advertisement ? peripheral.advertisement.manufacturerData : undefined;
       if (data && data[0] === 0x99 && data[1] === 0x04) {
         if (!foundTags.find(tag => tag.id === peripheral.id)) {

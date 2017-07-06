@@ -1,5 +1,6 @@
 
 // This function is borrowed from https://github.com/ojousima/node-red/blob/master/ruuvi-node/ruuvitag.js
+// which is lisenced under BSD-3
 // Credits to GitHub user ojousima
 
 const parseRawRuuvi = function(manufacturerDataString){
