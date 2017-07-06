@@ -95,22 +95,32 @@ describe('module ruuvi', () => {
         jasmine.clock().tick(eddystoneBeaconScannerMock.mock.advertiseInterval);
       });
 
-      it('should emit "updated" with sensor data', (done) => {
-        tags.forEach(tag => tag.on('updated', data => tag.receivedData = data));
-        setTimeout(() => {
-          if (tags.filter(tag => tag.receivedData).length !== 2) {
-            return done.fail('Some tags received no data');
-          }
-          tags.forEach(tag => {
-            const data = tag.receivedData;
-            expect("humidity" in data).toBeTruthy();
-            expect("temperature" in data).toBeTruthy();
-          });
+      describe('emitted data', () => {
 
-          done();
-        }, eddystoneBeaconScannerMock.mock.advertiseInterval);
-        jasmine.clock().tick(eddystoneBeaconScannerMock.mock.advertiseInterval);
+        beforeEach((done) => {
+          const waitTime = eddystoneBeaconScannerMock.mock.advertiseInterval;
+          tags.forEach(tag => tag.on('updated', data => tag.receivedData = data));
+          setTimeout(() => {
+            done();
+          }, waitTime);
+          jasmine.clock().tick(waitTime + 1);
+        });
+
+        it('should have sensor data', () => {
+
+          const expectedDataKeys = (function () {
+            const tag_0_keys = [ "humidity", "temperature", "pressure" ];
+            return {
+              tag_0: tag_0_keys,
+              tag_1: tag_0_keys.concat([ 'accelerationX', 'accelerationY', 'accelerationZ', 'battery' ])
+            };
+          })();
+
+          expectedDataKeys.tag_0.forEach(key => expect(key in tags[0].receivedData).toBeTruthy());
+          expectedDataKeys.tag_1.forEach(key => expect(key in tags[1].receivedData).toBeTruthy());
+        });
       });
+
     });
 
     afterEach(function () {

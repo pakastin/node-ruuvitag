@@ -76,7 +76,7 @@ describe('parse.js', () => {
     });
   });
 
-  fdescribe('parsing data format 3', () => {
+  describe('parsing data format 3', () => {
     const data = createManufacturerData();
     const testValues = Object.keys(data.values).map(key => key);
 
