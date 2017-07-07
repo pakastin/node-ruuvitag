@@ -37,3 +37,8 @@ that.parseUrl = url => {
 
   return encodedData instanceof Error ? encodedData : getReadings(encodedData);
 };
+
+that.parseManufacturerData = dataBuffer => {
+  // parses data format 3
+  return dataFormats.format_3.parse(dataBuffer);
+};

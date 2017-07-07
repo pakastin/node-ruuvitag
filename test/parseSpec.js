@@ -1,5 +1,24 @@
 const parser = require('../parse');
 
+const createManufacturerData = function () {
+  const values = {
+    humidity: 58.5,
+    temperature: 21.58,
+    pressure: 101300,
+    accelerationX: 14850,
+    accelerationY: -9235,
+    accelerationZ: 580,
+    battery: 2958
+  };
+  const manufacturerId = [0x99, 0x04];
+  const dataFormat = [0x03];
+  const valuesArray = [0x75, 21, 58, 0xc8, 0x64, 0x3a, 0x02, 0xdb, 0xed, 0x02, 0x44, 0x0b, 0x8e];
+  return {
+    values: values,
+    buffer: Buffer.from(manufacturerId.concat(dataFormat).concat(valuesArray))
+  };
+};
+
 describe('parse.js', () => {
 
   const data = [0x98, 0x15, 0x00, 0xc0, 0x30];
@@ -55,6 +74,19 @@ describe('parse.js', () => {
     it('should parse pressure value', () => {
       expect(result.pressure).toBe(992);
     });
+  });
+
+  describe('parsing data format 3', () => {
+    const data = createManufacturerData();
+    const testValues = Object.keys(data.values).map(key => key);
+
+    it('should parse all values correctly', () => {
+      const result = parser.parseManufacturerData(data.buffer);
+      testValues.forEach(key => {
+        expect(result[key]).toBe(data.values[key]);
+      });
+    });
+
   });
 
   describe('parsing data format 4', () => {

@@ -2,6 +2,7 @@ const mockery = require('mockery');
 const sinon = require('sinon');
 const mocks = require('./mocks');
 const eddystoneBeaconScannerMock = mocks.eddystoneBeaconScannerMock;
+const nobleMock = mocks.nobleMock;
 const EventEmitter = require('events').EventEmitter;
 
 const catchFail = done => { return (err) => done.fail(err); };
@@ -15,10 +16,12 @@ describe('module ruuvi', () => {
   beforeEach(() => {
     mockery.enable();
     mockery.registerMock('eddystone-beacon-scanner', eddystoneBeaconScannerMock.mock);
+    mockery.registerMock('noble', nobleMock.mock);
     mockery.registerAllowable('../ruuvi');
     mockery.registerAllowable('./parse');
     mockery.registerAllowable('events');
     eddystoneBeaconScannerMock.mock.enableTagFinding();
+    nobleMock.mock.enableTagFinding();
     ruuvi = require('../ruuvi');
   });
 
@@ -26,6 +29,7 @@ describe('module ruuvi', () => {
 
     beforeEach(() => {
       jasmine.clock().install();
+      nobleMock.mock.initialize();
     });
 
     it('should return a promise which is resolved with an array of ruuviTag objects', (done) => {
@@ -45,6 +49,7 @@ describe('module ruuvi', () => {
 
     it('should return a promise which is rejected if no tags were found', (done) => {
       eddystoneBeaconScannerMock.mock.disableTagFinding();
+      nobleMock.mock.disableTagFinding();
       ruuvi.findTags()
         .then(data => done.fail('Should have returned an error'))
         .catch(err => {
@@ -65,6 +70,7 @@ describe('module ruuvi', () => {
 
     beforeEach((done) => {
       jasmine.clock().install();
+      nobleMock.mock.initialize();
       ruuvi.findTags()
         .then(result => {
           tags = result;
@@ -81,28 +87,40 @@ describe('module ruuvi', () => {
       });
 
       it('should emit "updated" when ruuvitag signal is received', (done) => {
-        let emitted = false;
-        tags[0].on('updated', data => emitted = true);
+        tags.forEach(tag => tag.on('updated', data => tag.hasEmitted = true));
         setTimeout(() => {
-          expect(emitted).toBeTruthy();
+          expect(tags.filter(tag => tag.hasEmitted).length).toBe(2);
           done();
         }, eddystoneBeaconScannerMock.mock.advertiseInterval);
         jasmine.clock().tick(eddystoneBeaconScannerMock.mock.advertiseInterval);
       });
 
-      it('should emit "updated" with sensor data', (done) => {
-        let receivedData;
-        tags[0].on('updated', data => receivedData = data);
-        setTimeout(() => {
-          if (!receivedData) {
-            return done.fail('No data received');
-          }
-          expect("url" in receivedData).toBeTruthy();
-          expect("humidity" in receivedData).toBeTruthy();
-          done();
-        }, eddystoneBeaconScannerMock.mock.advertiseInterval);
-        jasmine.clock().tick(eddystoneBeaconScannerMock.mock.advertiseInterval);
+      describe('emitted data', () => {
+
+        beforeEach((done) => {
+          const waitTime = eddystoneBeaconScannerMock.mock.advertiseInterval;
+          tags.forEach(tag => tag.on('updated', data => tag.receivedData = data));
+          setTimeout(() => {
+            done();
+          }, waitTime);
+          jasmine.clock().tick(waitTime + 1);
+        });
+
+        it('should have sensor data', () => {
+
+          const expectedDataKeys = (function () {
+            const tag_0_keys = [ "humidity", "temperature", "pressure" ];
+            return {
+              tag_0: tag_0_keys,
+              tag_1: tag_0_keys.concat([ 'accelerationX', 'accelerationY', 'accelerationZ', 'battery' ])
+            };
+          })();
+
+          expectedDataKeys.tag_0.forEach(key => expect(key in tags[0].receivedData).toBeTruthy());
+          expectedDataKeys.tag_1.forEach(key => expect(key in tags[1].receivedData).toBeTruthy());
+        });
       });
+
     });
 
     afterEach(function () {
