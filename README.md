@@ -54,10 +54,14 @@ Is an ```eventEmitter``` .
 Object ```data``` has
 following properties:
 
-* ```url``` -- original broadcasted url
+* ```url``` -- original broadcasted url if any
 * ```temperature```
 * ```pressure```
 * ```humidity```
+* ```barrery``` (battery voltage)
+* ```accelerationX```
+* ```accelerationY```
+* ```accelerationZ```
 
 
 
