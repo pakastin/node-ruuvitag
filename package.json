@@ -1,17 +1,17 @@
 {
   "name": "node-ruuvitag",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "engines": {
     "node": ">6.0.0"
   },
   "repository": "https://github.com/Espesen/node-ruuvitag",
   "description": "Read data from  RuuviTag weather station",
-  "main": "index.js",
+  "main": "ruuvi.js",
   "scripts": {
     "test": "gulp test"
   },
   "author": "",
-  "license": "ISC",
+  "license": "BSD-3",
   "devDependencies": {
     "gulp": "^3.9.1",
     "gulp-jasmine": "^2.4.2",
