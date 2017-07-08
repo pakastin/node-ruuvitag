@@ -5,10 +5,6 @@ weather station.
 Tested on Raspberry Pi 3. Depends on [eddystone-beacon-scanner](https://github.com/sandeepmistry/node-eddystone-beacon-scanner). See [instructions](https://github.com/sandeepmistry/noble) on
  how to enable BLE on RasPi and how to run without root.
 
-Currently supports only
-[data formats 2 and 4](https://github.com/ruuvi/ruuvi-sensor-protocols))
-(default for new RuuviTags)
-
 ### Installation
 
 ```
@@ -62,6 +58,9 @@ following properties:
 * ```accelerationX```
 * ```accelerationY```
 * ```accelerationZ```
+
+See [data formats](https://github.com/ruuvi/ruuvi-sensor-protocols) for
+info about RuuviTag sensor values.
 
 
 
