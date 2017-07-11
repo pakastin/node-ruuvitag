@@ -21,12 +21,12 @@ ruuvi.findTags()
         // tags is now array of found ruuvitags
         tags[0].on('updated', data => {
             console.log(data.temperature);
-        }
-    }
+        });
+    })
     .catch(err => {
         // error is returned if no tags are found
         console.log(err);
-    }
+    });
 ```
 
 ### API
