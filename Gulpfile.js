@@ -17,7 +17,6 @@ gulp.task('jshint', function () {
     .pipe(jshint.reporter('default'));
 });
 
-
 gulp.task('watch', ['jshint', 'test'], function () {
   gulp.watch(['**/*.js', '!node_modules/**/*.js'], ['jshint', 'test']);
 });

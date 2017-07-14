@@ -1,14 +1,14 @@
 # node-ruuvitag
-Node.js module for reading data from a [Ruuvitag](http://tag.ruuvi.com) 
+Node.js module for reading data from a [Ruuvitag](http://tag.ruuvi.com)
 weather station.
 
-Tested on Raspberry Pi 3. Depends on [eddystone-beacon-scanner](https://github.com/sandeepmistry/node-eddystone-beacon-scanner). See [instructions](https://github.com/sandeepmistry/noble) on
+Tested on Raspberry Pi 3. Depends on [eddystone-beacon-scanner](https://github.com/sandeepmistry/node-eddystone-beacon-scanner) and [noble](https://github.com/sandeepmistry/noble). See [instructions](https://github.com/sandeepmistry/noble) on
  how to enable BLE on RasPi and how to run without root.
 
 ### Installation
 
 ```
-npm install node-ruuvitag
+npm install node-ruuvitag --production
 ```
 
 
@@ -20,13 +20,14 @@ ruuvi.findTags()
     .then(tags => {
         // tags is now array of found ruuvitags
         tags[0].on('updated', data => {
-            console.log(data.temperature);
-        }
-    }
+            console.log('RuuviTag id ' + tags[0].id + ' received the following data:');
+            console.log(JSON.stringify(data, null, '\t'));
+        });
+    })
     .catch(err => {
         // error is returned if no tags are found
         console.log(err);
-    }
+    });
 ```
 
 ### API
