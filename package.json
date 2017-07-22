@@ -1,6 +1,6 @@
 {
   "name": "node-ruuvitag",
-  "version": "1.0.1",
+  "version": "2.0.0",
   "engines": {
     "node": ">6.0.0"
   },
@@ -22,7 +22,6 @@
     "sinon": "^2.3.5"
   },
   "dependencies": {
-    "eddystone-beacon-scanner": "^3.0.0",
     "noble": "^1.8.1"
   }
 }

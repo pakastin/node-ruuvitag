@@ -1,7 +1,6 @@
 const mockery = require('mockery');
 const sinon = require('sinon');
 const mocks = require('./mocks');
-const eddystoneBeaconScannerMock = mocks.eddystoneBeaconScannerMock;
 const nobleMock = mocks.nobleMock;
 const EventEmitter = require('events').EventEmitter;
 
@@ -15,12 +14,11 @@ describe('module ruuvi', () => {
 
   beforeEach(() => {
     mockery.enable();
-    mockery.registerMock('eddystone-beacon-scanner', eddystoneBeaconScannerMock.mock);
     mockery.registerMock('noble', nobleMock.mock);
     mockery.registerAllowable('../ruuvi');
-    mockery.registerAllowable('./parse');
+    mockery.registerAllowable('./lib/parse');
+    mockery.registerAllowable('./lib/eddystone');
     mockery.registerAllowable('events');
-    eddystoneBeaconScannerMock.mock.enableTagFinding();
     nobleMock.mock.enableTagFinding();
     ruuvi = require('../ruuvi');
   });
@@ -48,7 +46,6 @@ describe('module ruuvi', () => {
     });
 
     it('should return a promise which is rejected if no tags were found', (done) => {
-      eddystoneBeaconScannerMock.mock.disableTagFinding();
       nobleMock.mock.disableTagFinding();
       ruuvi.findTags()
         .then(data => done.fail('Should have returned an error'))
@@ -91,14 +88,14 @@ describe('module ruuvi', () => {
         setTimeout(() => {
           expect(tags.filter(tag => tag.hasEmitted).length).toBe(2);
           done();
-        }, eddystoneBeaconScannerMock.mock.advertiseInterval);
-        jasmine.clock().tick(eddystoneBeaconScannerMock.mock.advertiseInterval);
+        }, nobleMock.mock.advertiseInterval);
+        jasmine.clock().tick(nobleMock.mock.advertiseInterval);
       });
 
       describe('emitted data', () => {
 
         beforeEach((done) => {
-          const waitTime = eddystoneBeaconScannerMock.mock.advertiseInterval;
+          const waitTime = nobleMock.mock.advertiseInterval;
           tags.forEach(tag => tag.on('updated', data => tag.receivedData = data));
           setTimeout(() => {
             done();
@@ -109,10 +106,10 @@ describe('module ruuvi', () => {
         it('should have sensor data', () => {
 
           const expectedDataKeys = (function () {
-            const tag_0_keys = [ "humidity", "temperature", "pressure" ];
+            const tag_1_keys = [ "humidity", "temperature", "pressure" ];
             return {
-              tag_0: tag_0_keys,
-              tag_1: tag_0_keys.concat([ 'accelerationX', 'accelerationY', 'accelerationZ', 'battery' ])
+              tag_1: tag_1_keys,
+              tag_0: tag_1_keys.concat([ 'accelerationX', 'accelerationY', 'accelerationZ', 'battery' ])
             };
           })();
 

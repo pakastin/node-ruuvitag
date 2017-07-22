@@ -14,38 +14,6 @@ const ruuviTags = [
   { 'id': 'fbf6df2d6abe', dataFormat: 4 }
 ];
 
-class EddystoneBeaconScannerMock extends EventEmitter {
-
-  constructor() {
-    super();
-    this.tagsAvailable = false;
-    this.advertiseInterval = 1000;
-  }
-
-  startScanning() {
-    if (this.tagsAvailable) {
-      ruuviTags.forEach(tag => {
-        const self = this;
-        if (tag.dataFormat !== 3) {
-          this.emit('found', { id: tag.id, url: generateRandomUrl() });
-          setInterval(() => {
-            self.emit('updated', { id: tag.id, url: generateRandomUrl() });
-          }, this.advertiseInterval);
-        }
-      });
-    }
-  }
-
-  disableTagFinding() {
-    this.tagsAvailable = false;
-  }
-
-  enableTagFinding() {
-    this.tagsAvailable = true;
-  }
-
-}
-
 class NobleMock extends EventEmitter {
   constructor() {
     super();
@@ -57,8 +25,20 @@ class NobleMock extends EventEmitter {
   startScanning() {
     if (!this.tagsAvailable) return;
     setInterval(() => {
-      ruuviTags.filter(tag => tag.dataFormat === 3).forEach(tag => {
-        this.emit('discover', { id: tag.id, advertisement: { manufacturerData: tag. manufacturerData }});
+      ruuviTags.forEach(tag => {
+        if (tag.dataFormat === 3) {
+          this.emit('discover', { id: tag.id, advertisement: { manufacturerData: tag. manufacturerData }});
+        }
+        else {
+          this.emit('discover', {
+            id: tag.id,
+            advertisement: {
+              serviceData: [ { uuid: 'feaa', data: Buffer.from(
+                [ 0x10, 0xf9, 0x03, 0x72, 0x75, 0x75, 0x2e, 0x76, 0x69, 0x2f, 0x23, 0x42, 0x45, 0x51, 0x5a,
+                0x41, 0x4d, 0x4c, 0x73, 0x4f]) }]
+            }
+          });
+        }
       });
     }, this.advertiseInterval);
   }
@@ -80,10 +60,6 @@ class NobleMock extends EventEmitter {
 }
 
 const obj = module.exports = {
-
-  eddystoneBeaconScannerMock: {
-    mock: new EddystoneBeaconScannerMock()
-  },
 
   nobleMock: {
     mock: new NobleMock()

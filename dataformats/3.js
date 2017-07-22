@@ -22,7 +22,6 @@ const parseRawRuuvi = function(manufacturerDataString){
   let robject = {};
 
   let humidity = manufacturerDataString.substring(humidityStart, humidityEnd);
-  //console.log(humidity);
   humidity = parseInt(humidity, 16);
   humidity/= 2; //scale
   robject.humidity = humidity;

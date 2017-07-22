@@ -1,4 +1,4 @@
-const parser = require('../parse');
+const parser = require('../lib/parse');
 
 const createManufacturerData = function () {
   const values = {

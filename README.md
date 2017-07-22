@@ -2,7 +2,7 @@
 Node.js module for reading data from a [Ruuvitag](http://tag.ruuvi.com)
 weather station.
 
-Tested on Raspberry Pi 3. Depends on [eddystone-beacon-scanner](https://github.com/sandeepmistry/node-eddystone-beacon-scanner) and [noble](https://github.com/sandeepmistry/noble). See [instructions](https://github.com/sandeepmistry/noble) on
+Tested on Raspberry Pi 3. Depends on [noble](https://github.com/sandeepmistry/noble). See [instructions](https://github.com/sandeepmistry/noble) on
  how to enable BLE on RasPi and how to run without root.
 
 ### Installation
