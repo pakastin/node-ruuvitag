@@ -27,6 +27,7 @@ describe('module ruuvi', () => {
 
     beforeEach(() => {
       jasmine.clock().install();
+      ruuvi._foundTags = [];
       nobleMock.mock.initialize();
     });
 

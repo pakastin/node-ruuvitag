@@ -37,6 +37,9 @@ ruuvi.findTags()
 Finds available ruuvitags. Returns a promise which is resolved with an
 array of ```ruuviTag``` objects.
 
+If you call ```findTags``` multiple times, it always returns **all**
+found RuuviTags this far.
+
 ### ```ruuviTag``` object
 
 Is an ```eventEmitter``` .
