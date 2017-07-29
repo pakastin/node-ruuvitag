@@ -9,6 +9,7 @@ const catchFail = done => { return (err) => done.fail(err); };
 describe('module ruuvi', () => {
 
   const findTagsScanTime = 5000;
+  const numberOfRuuviTags = 2;
 
   let ruuvi;
 
@@ -21,21 +22,27 @@ describe('module ruuvi', () => {
     mockery.registerAllowable('events');
     nobleMock.mock.enableTagFinding();
     ruuvi = require('../ruuvi');
+    jasmine.clock().install();
+    nobleMock.mock.startScanning();
+
+  });
+
+  it('should be eventEmitter', () => {
+      const EventEmitter = require('events').EventEmitter;
+      expect(ruuvi instanceof EventEmitter).toBeTruthy();
   });
 
   describe('method findTags', () => {
 
     beforeEach(() => {
-      jasmine.clock().install();
       ruuvi._foundTags = [];
-      nobleMock.mock.initialize();
     });
 
     it('should return a promise which is resolved with an array of ruuviTag objects', (done) => {
       ruuvi.findTags()
         .then(tags => {
           expect(tags).toEqual(jasmine.any(Array));
-          expect(tags.length).toBe(2);
+          expect(tags.length).toBe(numberOfRuuviTags);
           // We'll test if objects are instances of EventEmitter, perhaps a better test will be written later
           tags.forEach(tag => {
             expect(tag).toEqual(jasmine.any(EventEmitter));
@@ -56,10 +63,30 @@ describe('module ruuvi', () => {
         });
       jasmine.clock().tick(findTagsScanTime);
     });
+  });
 
-    afterEach(function () {
-      jasmine.clock().uninstall();
+  describe('events: ', () => {
+
+    it('should emit "found" when a new RuuviTag is found', (done) => {
+
+      ruuvi._foundTags = [];
+      let count = 0;
+
+      ruuvi.on('found', (data) => {
+        count++;
+        expect("id" in data).toBeTruthy();
+        expect(data instanceof EventEmitter).toBeTruthy();
+      });
+
+      setTimeout(function() {
+        expect(count).toBe(numberOfRuuviTags);
+        done();
+      }, 5000);
+
+      jasmine.clock().tick(5000);
+
     });
+
   });
 
   describe('class RuuviTag', () => {
@@ -67,8 +94,6 @@ describe('module ruuvi', () => {
     let tags;
 
     beforeEach((done) => {
-      jasmine.clock().install();
-      nobleMock.mock.initialize();
       ruuvi.findTags()
         .then(result => {
           tags = result;
@@ -118,15 +143,13 @@ describe('module ruuvi', () => {
           expectedDataKeys.tag_1.forEach(key => expect(key in tags[1].receivedData).toBeTruthy());
         });
       });
-
+      
     });
 
-    afterEach(function () {
-      jasmine.clock().uninstall();
-    });
   });
 
   afterEach(function () {
+    jasmine.clock().uninstall();
     mockery.deregisterAll();
     mockery.disable();
   });

@@ -23,8 +23,10 @@ class NobleMock extends EventEmitter {
   }
 
   startScanning() {
-    if (!this.tagsAvailable) return;
     setInterval(() => {
+      if (!this.tagsAvailable) {
+        return;
+      }
       ruuviTags.forEach(tag => {
         if (tag.dataFormat === 3) {
           this.emit('discover', { id: tag.id, advertisement: { manufacturerData: tag. manufacturerData }});
@@ -35,18 +37,12 @@ class NobleMock extends EventEmitter {
             advertisement: {
               serviceData: [ { uuid: 'feaa', data: Buffer.from(
                 [ 0x10, 0xf9, 0x03, 0x72, 0x75, 0x75, 0x2e, 0x76, 0x69, 0x2f, 0x23, 0x42, 0x45, 0x51, 0x5a,
-                0x41, 0x4d, 0x4c, 0x73, 0x4f]) }]
+                  0x41, 0x4d, 0x4c, 0x73, 0x4f]) }]
             }
           });
         }
       });
     }, this.advertiseInterval);
-  }
-
-  initialize() {
-    setTimeout(() => {
-      this.emit('stateChange');
-    }, 50);
   }
 
   disableTagFinding() {
