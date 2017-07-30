@@ -16,26 +16,28 @@ npm install node-ruuvitag --production
 ```
 const ruuvi = require('node-ruuvitag');
 
-ruuvi.findTags()
-    .then(tags => {
-        // tags is now array of found ruuvitags
-        tags[0].on('updated', data => {
-            console.log('RuuviTag id ' + tags[0].id + ' received the following data:');
-            console.log(JSON.stringify(data, null, '\t'));
-        });
-    })
-    .catch(err => {
-        // error is returned if no tags are found
-        console.log(err);
-    });
+ruuvi.on('found', tag => {
+  console.log('Found RuuviTag, id: ' + tag.id);
+  tag.on('updated', data => {
+    console.log('Got data from RuuviTag ' + tag.id + ':\n' +
+      JSON.stringify(data, null, '\t'));
+  });
+});
+
 ```
+
+### Events
+
+Module ```ruuvi``` emits a ```found``` event, when a new RuuviTag
+is discovered. Event's payload is a ```ruuviTag``` object (see below)
 
 ### API
 
 ##### ruuvi.findTags()
 
 Finds available ruuvitags. Returns a promise which is resolved with an
-array of ```ruuviTag``` objects.
+array of ```ruuviTag``` objects or rejected with an error if no tags were
+found.
 
 If you call ```findTags``` multiple times, it always returns **all**
 found RuuviTags this far.
@@ -58,7 +60,7 @@ following properties:
 * ```temperature```
 * ```pressure```
 * ```humidity```
-* ```barrery``` (battery voltage)
+* ```battery``` (battery voltage)
 * ```accelerationX```
 * ```accelerationY```
 * ```accelerationZ```
