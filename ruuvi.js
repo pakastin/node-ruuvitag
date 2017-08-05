@@ -63,7 +63,12 @@ class Ruuvi extends EventEmitter {
         if (peripheral.id === ruuviTag.id) {
           if (peripheral.advertisement && peripheral.advertisement.manufacturerData) {
             // is data format 3
-            return ruuviTag.emit('updated', parser.parseManufacturerData(peripheral.advertisement.manufacturerData));
+            return ruuviTag.emit(
+              'updated',
+              Object.assign(
+                { dataFormat: 3 },
+                parser.parseManufacturerData(peripheral.advertisement.manufacturerData))
+            );
           }
     
           // is data format 2 or 4
