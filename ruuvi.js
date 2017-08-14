@@ -13,19 +13,19 @@ class RuuviTag extends EventEmitter {
 }
 
 class Ruuvi extends EventEmitter {
-    
+
   constructor() {
     super();
     this._foundTags = []; // this array will contain registered RuuviTags
     this.scanning = false;
     this.listenerAttached = false;
-    
+
     const self = this;
-    
+
     function onDiscover(peripheral) {
-    
+
       let newRuuviTag;
-      
+
       // Scan for new RuuviTags, add them to the array of found tags
       // is it a RuuviTag in RAW mode?
       const manufacturerData = peripheral.advertisement ? peripheral.advertisement.manufacturerData : undefined;
@@ -38,7 +38,7 @@ class Ruuvi extends EventEmitter {
           self.emit('found', newRuuviTag);
         }
       }
-    
+
       // is it a RuuviTag in Eddystone mode?
       else {
         const serviceDataArray = peripheral.advertisement ? peripheral.advertisement.serviceData : undefined;
@@ -56,8 +56,8 @@ class Ruuvi extends EventEmitter {
           }
         }
       }
-      
-    
+
+
       // Check if it is an advertisement by an already found RuuviTag, emit "updated" event
       self._foundTags.forEach(ruuviTag => {
         if (peripheral.id === ruuviTag.id) {
@@ -66,13 +66,13 @@ class Ruuvi extends EventEmitter {
             return ruuviTag.emit(
               'updated',
               Object.assign(
-                { dataFormat: 3 },
+                { dataFormat: 3, rssi: peripheral.rssi },
                 parser.parseManufacturerData(peripheral.advertisement.manufacturerData))
             );
           }
-    
+
           // is data format 2 or 4
-      
+
           const serviceDataArray = peripheral.advertisement.serviceData;
           const serviceData = serviceDataArray && serviceDataArray.length ? serviceDataArray[0] : undefined;
           const url = serviceData ? parseEddystoneBeacon(serviceData.data) : undefined;
@@ -81,6 +81,7 @@ class Ruuvi extends EventEmitter {
             ruuviTag.emit('updated', {
               url: url,
               dataFormat: parsed.dataFormat,
+              rssi: peripheral.rssi,
               humidity: parsed.humidity,
               temperature: parsed.temperature,
               pressure: parsed.pressure
@@ -89,9 +90,9 @@ class Ruuvi extends EventEmitter {
         }
       });
     }
-    
+
     noble.on('discover', onDiscover);
-    
+
     // start scanning
     if (noble.state === 'poweredOn') {
       noble.startScanning([], true);
@@ -101,22 +102,22 @@ class Ruuvi extends EventEmitter {
         noble.startScanning([], true);
       });
     }
-    
+
   }
-    
+
   findTags() {
-        
+
     return new Promise((resolve, reject) => {
-  
+
       setTimeout(() => {
         if (this._foundTags.length) {
           return resolve(this._foundTags);
         }
         reject(new Error('No beacons found'));
       }, 5000);
-  
+
     });
-        
+
   }
 }
 

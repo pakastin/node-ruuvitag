@@ -132,7 +132,7 @@ describe('module ruuvi', () => {
         it('should have sensor data', () => {
 
           const expectedDataKeys = (function () {
-            const tag_1_keys = [ "humidity", "temperature", "pressure" ];
+            const tag_1_keys = [ "humidity", "temperature", "pressure", "rssi" ];
             return {
               tag_1: tag_1_keys,
               tag_0: tag_1_keys.concat([ 'accelerationX', 'accelerationY', 'accelerationZ', 'battery' ])
@@ -143,7 +143,7 @@ describe('module ruuvi', () => {
           expectedDataKeys.tag_1.forEach(key => expect(key in tags[1].receivedData).toBeTruthy());
         });
       });
-      
+
     });
 
   });

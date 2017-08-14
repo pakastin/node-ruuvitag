@@ -60,6 +60,7 @@ following properties:
 * ```temperature```
 * ```pressure```
 * ```humidity```
+* ```rssi```
 * ```battery``` (battery voltage)
 * ```accelerationX```
 * ```accelerationY```
