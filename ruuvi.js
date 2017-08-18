@@ -8,6 +8,7 @@ class RuuviTag extends EventEmitter {
   constructor(data) {
     super();
     this.id = data.id;
+    this.rssi = data.rssi;
   }
 
 }
@@ -33,6 +34,7 @@ class Ruuvi extends EventEmitter {
         if (!self._foundTags.find(tag => tag.id === peripheral.id)) {
           newRuuviTag = new RuuviTag({
             id: peripheral.id,
+            rssi: peripheral.rssi
           });
           self._foundTags.push(newRuuviTag);
           self.emit('found', newRuuviTag);
@@ -49,6 +51,7 @@ class Ruuvi extends EventEmitter {
             if (!self._foundTags.find(tag => tag.id === peripheral.id)) {
               newRuuviTag = new RuuviTag({
                 id: peripheral.id,
+                rssi: peripheral.rssi
               });
               self._foundTags.push(newRuuviTag);
               self.emit('found', newRuuviTag);
@@ -63,6 +66,7 @@ class Ruuvi extends EventEmitter {
         if (peripheral.id === ruuviTag.id) {
           if (peripheral.advertisement && peripheral.advertisement.manufacturerData) {
             // is data format 3
+            ruuviTag.rssi = peripheral.rssi;
             return ruuviTag.emit(
               'updated',
               Object.assign(
@@ -78,6 +82,7 @@ class Ruuvi extends EventEmitter {
           const url = serviceData ? parseEddystoneBeacon(serviceData.data) : undefined;
           const parsed = url ? parser.parseUrl(url) : undefined;
           if (parsed && !(parsed instanceof Error)) {
+            ruuviTag.rssi = peripheral.rssi;
             ruuviTag.emit('updated', {
               url: url,
               dataFormat: parsed.dataFormat,
