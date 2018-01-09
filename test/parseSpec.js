@@ -26,7 +26,7 @@ describe('parse.js', () => {
   const dataBuffer_format_4 = Buffer.from([0x04].concat(data).concat([0x3e]));
   const testUrl_dataFormat_2 = 'ruu.vi/#' + dataBuffer_format_2.toString('base64');
   const testUrl_dataFormat_4 = ('ruu.vi/#' + dataBuffer_format_4.toString('base64')).slice(0, 17);
-
+  
   it('should return error if not a ruuviTag url', (done) => {
     const result = parser.parseUrl('https://bad.url.com/#foo');
     if (!(result instanceof Error)) {
@@ -105,8 +105,8 @@ describe('parse.js', () => {
     it('should parse pressure value', () => {
       expect(result.pressure).toBe(992);
     });
-    it('should parse tag id', () => {
-      expect(result.id).toBeTruthy();
+    it('should parse eddystoneId', () => {      
+      expect(result.eddystoneId).toBeTruthy();
     });
   });
   

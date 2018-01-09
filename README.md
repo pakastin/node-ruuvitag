@@ -54,12 +54,13 @@ Is an ```eventEmitter``` .
 
 ```updated```: emitted when weather station data is received.
 Object ```data``` has
-following properties:
+following properties (depending on data format):
 
 * ```url``` -- original broadcasted url if any
 * ```temperature```
 * ```pressure```
 * ```humidity```
+* ```eddystoneId``` -- in data format 4
 * ```rssi```
 * ```battery``` (battery voltage)
 * ```accelerationX```

@@ -84,7 +84,8 @@ class Ruuvi extends EventEmitter {
               rssi: peripheral.rssi,
               humidity: parsed.humidity,
               temperature: parsed.temperature,
-              pressure: parsed.pressure
+              pressure: parsed.pressure,
+              eddystoneId: parsed.eddystoneId
             });
           }
         }
