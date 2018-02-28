@@ -20,9 +20,7 @@ class Ruuvi extends EventEmitter {
     this.scanning = false;
     this.listenerAttached = false;
 
-    const self = this;
-
-    function onDiscover(peripheral) {
+    const onDiscover = (peripheral) => {
 
       let newRuuviTag;
 
@@ -30,12 +28,12 @@ class Ruuvi extends EventEmitter {
       // is it a RuuviTag in RAW mode?
       const manufacturerData = peripheral.advertisement ? peripheral.advertisement.manufacturerData : undefined;
       if (manufacturerData && manufacturerData[0] === 0x99 && manufacturerData[1] === 0x04) {
-        if (!self._foundTags.find(tag => tag.id === peripheral.id)) {
+        if (!this._foundTags.find(tag => tag.id === peripheral.id)) {
           newRuuviTag = new RuuviTag({
             id: peripheral.id,
           });
-          self._foundTags.push(newRuuviTag);
-          self.emit('found', newRuuviTag);
+          this._foundTags.push(newRuuviTag);
+          this.emit('found', newRuuviTag);
         }
       }
 
@@ -46,12 +44,12 @@ class Ruuvi extends EventEmitter {
         if (serviceData && serviceData.uuid === 'feaa') {
           const url = parseEddystoneBeacon(serviceData.data);
           if (url && url.match(/ruu\.vi/)) {
-            if (!self._foundTags.find(tag => tag.id === peripheral.id)) {
+            if (!this._foundTags.find(tag => tag.id === peripheral.id)) {
               newRuuviTag = new RuuviTag({
                 id: peripheral.id,
               });
-              self._foundTags.push(newRuuviTag);
-              self.emit('found', newRuuviTag);
+              this._foundTags.push(newRuuviTag);
+              this.emit('found', newRuuviTag);
             }
           }
         }
@@ -59,7 +57,7 @@ class Ruuvi extends EventEmitter {
 
 
       // Check if it is an advertisement by an already found RuuviTag, emit "updated" event
-      self._foundTags.forEach(ruuviTag => {
+      this._foundTags.forEach(ruuviTag => {
         if (peripheral.id === ruuviTag.id) {
           if (peripheral.advertisement && peripheral.advertisement.manufacturerData) {
             // is data format 3
