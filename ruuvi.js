@@ -22,8 +22,8 @@ class Ruuvi extends EventEmitter {
     this.listenerAttached = false;
 
     const registerTag = (tag) => {
-      this._foundTags.push(newRuuviTag);
-      this._tagLookup[peripheral.id] = newRuuviTag;
+      this._foundTags.push(tag);
+      this._tagLookup[tag.id] = tag;
     }
 
     const onDiscover = (peripheral) => {
