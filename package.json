@@ -14,14 +14,14 @@
   "license": "BSD-3",
   "devDependencies": {
     "gulp": "^3.9.1",
-    "gulp-jasmine": "^2.4.2",
-    "gulp-jshint": "^2.0.4",
-    "gulp-plumber": "^1.1.0",
+    "gulp-jasmine": "^3.0.0",
+    "gulp-jshint": "^2.1.0",
+    "gulp-plumber": "^1.2.0",
     "jshint": "^2.9.5",
     "mockery": "^2.1.0",
-    "sinon": "^2.3.5"
+    "sinon": "^4.4.2"
   },
   "dependencies": {
-    "noble": "^1.8.1"
+    "noble": "^1.9.0"
   }
 }
