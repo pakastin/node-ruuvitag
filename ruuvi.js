@@ -17,8 +17,14 @@ class Ruuvi extends EventEmitter {
   constructor() {
     super();
     this._foundTags = []; // this array will contain registered RuuviTags
+    this._tagLookup = {};
     this.scanning = false;
     this.listenerAttached = false;
+
+    const registerTag = (tag) => {
+      this._foundTags.push(newRuuviTag);
+      this._tagLookup[peripheral.id] = newRuuviTag;
+    }
 
     const onDiscover = (peripheral) => {
 
@@ -28,11 +34,11 @@ class Ruuvi extends EventEmitter {
       // is it a RuuviTag in RAW mode?
       const manufacturerData = peripheral.advertisement ? peripheral.advertisement.manufacturerData : undefined;
       if (manufacturerData && manufacturerData[0] === 0x99 && manufacturerData[1] === 0x04) {
-        if (!this._foundTags.find(tag => tag.id === peripheral.id)) {
+        if (!this._tagLookup[peripheral.id]) {
           newRuuviTag = new RuuviTag({
             id: peripheral.id,
           });
-          this._foundTags.push(newRuuviTag);
+          registerTag(newRuuviTag);
           this.emit('found', newRuuviTag);
         }
       }
@@ -44,11 +50,11 @@ class Ruuvi extends EventEmitter {
         if (serviceData && serviceData.uuid === 'feaa') {
           const url = parseEddystoneBeacon(serviceData.data);
           if (url && url.match(/ruu\.vi/)) {
-            if (!this._foundTags.find(tag => tag.id === peripheral.id)) {
+            if (!this._tagLookup[peripheral.id]) {
               newRuuviTag = new RuuviTag({
                 id: peripheral.id,
               });
-              this._foundTags.push(newRuuviTag);
+              registerTag(newRuuviTag);
               this.emit('found', newRuuviTag);
             }
           }
@@ -57,37 +63,37 @@ class Ruuvi extends EventEmitter {
 
 
       // Check if it is an advertisement by an already found RuuviTag, emit "updated" event
-      this._foundTags.forEach(ruuviTag => {
-        if (peripheral.id === ruuviTag.id) {
-          if (peripheral.advertisement && peripheral.advertisement.manufacturerData) {
-            // is data format 3
-            return ruuviTag.emit(
-              'updated',
-              Object.assign(
-                { dataFormat: 3, rssi: peripheral.rssi },
-                parser.parseManufacturerData(peripheral.advertisement.manufacturerData))
-            );
-          }
+      const ruuviTag = this._tagLookup[peripheral.id];
 
-          // is data format 2 or 4
-
-          const serviceDataArray = peripheral.advertisement.serviceData;
-          const serviceData = serviceDataArray && serviceDataArray.length ? serviceDataArray[0] : undefined;
-          const url = serviceData ? parseEddystoneBeacon(serviceData.data) : undefined;
-          const parsed = url ? parser.parseUrl(url) : undefined;
-          if (parsed && !(parsed instanceof Error)) {
-            ruuviTag.emit('updated', {
-              url: url,
-              dataFormat: parsed.dataFormat,
-              rssi: peripheral.rssi,
-              humidity: parsed.humidity,
-              temperature: parsed.temperature,
-              pressure: parsed.pressure,
-              eddystoneId: parsed.eddystoneId
-            });
-          }
+      if (ruuviTag) {
+        if (peripheral.advertisement && peripheral.advertisement.manufacturerData) {
+          // is data format 3
+          return ruuviTag.emit(
+            'updated',
+            Object.assign(
+              { dataFormat: 3, rssi: peripheral.rssi },
+              parser.parseManufacturerData(peripheral.advertisement.manufacturerData))
+          );
         }
-      });
+
+        // is data format 2 or 4
+
+        const serviceDataArray = peripheral.advertisement.serviceData;
+        const serviceData = serviceDataArray && serviceDataArray.length ? serviceDataArray[0] : undefined;
+        const url = serviceData ? parseEddystoneBeacon(serviceData.data) : undefined;
+        const parsed = url ? parser.parseUrl(url) : undefined;
+        if (parsed && !(parsed instanceof Error)) {
+          ruuviTag.emit('updated', {
+            url: url,
+            dataFormat: parsed.dataFormat,
+            rssi: peripheral.rssi,
+            humidity: parsed.humidity,
+            temperature: parsed.temperature,
+            pressure: parsed.pressure,
+            eddystoneId: parsed.eddystoneId
+          });
+        }
+      }
     }
 
     noble.on('discover', onDiscover);

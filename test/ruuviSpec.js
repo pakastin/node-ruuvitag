@@ -36,6 +36,7 @@ describe('module ruuvi', () => {
 
     beforeEach(() => {
       ruuvi._foundTags = [];
+      ruuvi._tagLookup = {};
     });
 
     it('should return a promise which is resolved with an array of ruuviTag objects', (done) => {
@@ -70,6 +71,7 @@ describe('module ruuvi', () => {
     it('should emit "found" when a new RuuviTag is found', (done) => {
 
       ruuvi._foundTags = [];
+      ruuvi._tagLookup = {};
       let count = 0;
 
       ruuvi.on('found', (data) => {
