@@ -16,12 +16,12 @@
     "gulp": "^3.9.1",
     "gulp-jasmine": "^3.0.0",
     "gulp-jshint": "^2.1.0",
-    "gulp-plumber": "^1.2.0",
-    "jshint": "^2.9.5",
+    "gulp-plumber": "^1.2.1",
+    "jshint": "^2.10.2",
     "mockery": "^2.1.0",
-    "sinon": "^4.4.2"
+    "sinon": "^4.5.0"
   },
   "dependencies": {
-    "noble": "^1.9.0"
+    "@abandonware/noble": "^1.9.2-3"
   }
 }
