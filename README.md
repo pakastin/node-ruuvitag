@@ -8,13 +8,13 @@ Tested on Raspberry Pi 3. Depends on [noble](https://github.com/sandeepmistry/no
 ### Installation
 
 ```
-npm install node-ruuvitag --production
+npm install @pakastin/node-ruuvitag --production
 ```
 
 
 ### Usage example
 ```
-const ruuvi = require('node-ruuvitag');
+const ruuvi = require('@pakastin/node-ruuvitag');
 
 ruuvi.on('found', tag => {
   console.log('Found RuuviTag, id: ' + tag.id);
