@@ -22,6 +22,6 @@
     "sinon": "^7.4.1"
   },
   "dependencies": {
-    "noble": "^1.9.1"
+    "@abandonware/noble": "~1.9.2-3"
   }
 }

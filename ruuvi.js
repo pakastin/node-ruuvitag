@@ -1,20 +1,17 @@
-const noble = require('noble');
+const noble = require('@abandonware/noble');
 const EventEmitter = require('events').EventEmitter;
 const parser = require('./lib/parse');
 const parseEddystoneBeacon = require('./lib/eddystone');
 
 class RuuviTag extends EventEmitter {
-
-  constructor(data) {
+  constructor (data) {
     super();
     this.id = data.id;
   }
-
 }
 
 class Ruuvi extends EventEmitter {
-
-  constructor() {
+  constructor () {
     super();
     this._foundTags = []; // this array will contain registered RuuviTags
     this._tagLookup = {};
@@ -24,10 +21,9 @@ class Ruuvi extends EventEmitter {
     const registerTag = (tag) => {
       this._foundTags.push(tag);
       this._tagLookup[tag.id] = tag;
-    }
+    };
 
     const onDiscover = (peripheral) => {
-
       let newRuuviTag;
 
       // Scan for new RuuviTags, add them to the array of found tags
@@ -41,10 +37,9 @@ class Ruuvi extends EventEmitter {
           registerTag(newRuuviTag);
           this.emit('found', newRuuviTag);
         }
-      }
+      } else {
+        // is it a RuuviTag in Eddystone mode?
 
-      // is it a RuuviTag in Eddystone mode?
-      else {
         const serviceDataArray = peripheral.advertisement ? peripheral.advertisement.serviceData : undefined;
         const serviceData = serviceDataArray && serviceDataArray.length ? serviceDataArray[0] : undefined;
         if (serviceData && serviceData.uuid === 'feaa') {
@@ -60,7 +55,6 @@ class Ruuvi extends EventEmitter {
           }
         }
       }
-
 
       // Check if it is an advertisement by an already found RuuviTag, emit "updated" event
       const ruuviTag = this._tagLookup[peripheral.id];
@@ -94,36 +88,30 @@ class Ruuvi extends EventEmitter {
           });
         }
       }
-    }
+    };
 
     noble.on('discover', onDiscover);
 
     // start scanning
     if (noble.state === 'poweredOn') {
       noble.startScanning([], true);
-    }
-    else {
+    } else {
       noble.once('stateChange', () => {
         noble.startScanning([], true);
       });
     }
-
   }
 
-  findTags() {
-
+  findTags () {
     return new Promise((resolve, reject) => {
-
       setTimeout(() => {
         if (this._foundTags.length) {
           return resolve(this._foundTags);
         }
         reject(new Error('No beacons found'));
       }, 5000);
-
     });
-
   }
 }
 
-const ruuvi = module.exports = new Ruuvi();
+module.exports = new Ruuvi();
