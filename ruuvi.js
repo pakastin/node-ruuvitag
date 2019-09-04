@@ -1,4 +1,4 @@
-const noble = require('noble');
+const noble = require('@abandonware/noble');
 const EventEmitter = require('events').EventEmitter;
 const parser = require('./lib/parse');
 const parseEddystoneBeacon = require('./lib/eddystone');
