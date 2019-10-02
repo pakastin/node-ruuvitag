@@ -1,4 +1,4 @@
-const noble = require('noble');
+const noble = require('@abandonware/noble');
 const EventEmitter = require('events').EventEmitter;
 const parser = require('./lib/parse');
 const parseEddystoneBeacon = require('./lib/eddystone');
@@ -67,11 +67,11 @@ class Ruuvi extends EventEmitter {
 
       if (ruuviTag) {
         if (peripheral.advertisement && peripheral.advertisement.manufacturerData) {
-          // is data format 3
+          let dataFormat = peripheral.advertisement.manufacturerData[2];
           return ruuviTag.emit(
             'updated',
             Object.assign(
-              { dataFormat: 3, rssi: peripheral.rssi },
+              { dataFormat: dataFormat, rssi: peripheral.rssi },
               parser.parseManufacturerData(peripheral.advertisement.manufacturerData))
           );
         }
