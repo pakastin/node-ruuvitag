@@ -1,7 +1,6 @@
-const gulp = require('gulp')
-  , jasmine = require('gulp-jasmine')
-  , plumber = require('gulp-plumber')
-  , jshint = require('gulp-jshint');
+const gulp = require('gulp'),
+   jasmine = require('gulp-jasmine'),
+   plumber = require('gulp-plumber');
 
 gulp.task('test', function () {
   gulp.src('test/*Spec.js')
@@ -10,12 +9,6 @@ gulp.task('test', function () {
     .on('error', (err) => { console.log('Error in tests! ' + err.message); });
 });
 
-gulp.task('jshint', function () {
-  gulp.src(['**/*.js', '!node_modules/**/*.js'])
-    .pipe(plumber())
-    .pipe(jshint())
-    .pipe(jshint.reporter('default'));
-});
 
 gulp.task('watch', ['jshint', 'test'], function () {
   gulp.watch(['**/*.js', '!node_modules/**/*.js'], ['jshint', 'test']);

@@ -8,16 +8,16 @@
   "description": "Read data from RuuviTag weather station",
   "main": "ruuvi.js",
   "scripts": {
-    "test": "gulp test"
+    "test": "gulp test",
+    "lint": "eslint '**/*.js'"
   },
   "author": "",
   "license": "BSD-3",
   "devDependencies": {
+    "eslint": "^6.8.0",
     "gulp": "^4.0.2",
     "gulp-jasmine": "^4.0.0",
-    "gulp-jshint": "^2.1.0",
     "gulp-plumber": "^1.2.1",
-    "jshint": "^2.11.0",
     "mockery": "^2.1.0",
     "sinon": "^8.1.1"
   },
