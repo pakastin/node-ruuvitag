@@ -1,10 +1,10 @@
-const noble = require('@abandonware/noble');
-const EventEmitter = require('events').EventEmitter;
-const parser = require('./lib/parse');
-const parseEddystoneBeacon = require('./lib/eddystone');
+const noble = require("@abandonware/noble");
+const EventEmitter = require("events").EventEmitter;
+const parser = require("./lib/parse");
+const parseEddystoneBeacon = require("./lib/eddystone");
 
 class RuuviTag extends EventEmitter {
-  constructor (data) {
+  constructor(data) {
     super();
     this.id = data.id;
     this.address = data.address;
@@ -14,19 +14,19 @@ class RuuviTag extends EventEmitter {
 }
 
 class Ruuvi extends EventEmitter {
-  constructor () {
+  constructor() {
     super();
     this._foundTags = []; // this array will contain registered RuuviTags
     this._tagLookup = {};
     this.scanning = false;
     this.listenerAttached = false;
 
-    const registerTag = (tag) => {
+    const registerTag = tag => {
       this._foundTags.push(tag);
       this._tagLookup[tag.id] = tag;
     };
 
-    const onDiscover = (peripheral) => {
+    const onDiscover = peripheral => {
       let newRuuviTag;
 
       // Scan for new RuuviTags, add them to the array of found tags
@@ -41,14 +41,14 @@ class Ruuvi extends EventEmitter {
             connectable: peripheral.connectable,
           });
           registerTag(newRuuviTag);
-          this.emit('found', newRuuviTag);
+          this.emit("found", newRuuviTag);
         }
       } else {
         // is it a RuuviTag in Eddystone mode?
 
         const serviceDataArray = peripheral.advertisement ? peripheral.advertisement.serviceData : undefined;
         const serviceData = serviceDataArray && serviceDataArray.length ? serviceDataArray[0] : undefined;
-        if (serviceData && serviceData.uuid === 'feaa') {
+        if (serviceData && serviceData.uuid === "feaa") {
           const url = parseEddystoneBeacon(serviceData.data);
           if (url && url.match(/ruu\.vi/)) {
             if (!this._tagLookup[peripheral.id]) {
@@ -59,7 +59,7 @@ class Ruuvi extends EventEmitter {
                 connectable: peripheral.connectable,
               });
               registerTag(newRuuviTag);
-              this.emit('found', newRuuviTag);
+              this.emit("found", newRuuviTag);
             }
           }
         }
@@ -72,10 +72,11 @@ class Ruuvi extends EventEmitter {
         if (peripheral.advertisement && peripheral.advertisement.manufacturerData) {
           let dataFormat = peripheral.advertisement.manufacturerData[2];
           return ruuviTag.emit(
-            'updated',
+            "updated",
             Object.assign(
               { dataFormat: dataFormat, rssi: peripheral.rssi },
-              parser.parseManufacturerData(peripheral.advertisement.manufacturerData))
+              parser.parseManufacturerData(peripheral.advertisement.manufacturerData),
+            ),
           );
         }
 
@@ -86,38 +87,38 @@ class Ruuvi extends EventEmitter {
         const url = serviceData ? parseEddystoneBeacon(serviceData.data) : undefined;
         const parsed = url ? parser.parseUrl(url) : undefined;
         if (parsed && !(parsed instanceof Error)) {
-          ruuviTag.emit('updated', {
+          ruuviTag.emit("updated", {
             url: url,
             dataFormat: parsed.dataFormat,
             rssi: peripheral.rssi,
             humidity: parsed.humidity,
             temperature: parsed.temperature,
             pressure: parsed.pressure,
-            eddystoneId: parsed.eddystoneId
+            eddystoneId: parsed.eddystoneId,
           });
         }
       }
     };
 
-    noble.on('discover', onDiscover);
+    noble.on("discover", onDiscover);
 
     // start scanning
-    if (noble.state === 'poweredOn') {
+    if (noble.state === "poweredOn") {
       noble.startScanning([], true);
     } else {
-      noble.once('stateChange', () => {
+      noble.once("stateChange", () => {
         noble.startScanning([], true);
       });
     }
   }
 
-  findTags () {
+  findTags() {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
         if (this._foundTags.length) {
           return resolve(this._foundTags);
         }
-        reject(new Error('No beacons found'));
+        reject(new Error("No beacons found"));
       }, 5000);
     });
   }

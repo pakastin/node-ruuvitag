@@ -9,7 +9,8 @@
   "main": "ruuvi.js",
   "scripts": {
     "test": "jasmine test/*Spec.js",
-    "lint": "eslint '**/*.js'"
+    "lint": "eslint '**/*.js'",
+    "prettify": "prettier --write '**/*.js'"
   },
   "author": "",
   "license": "BSD-3",
@@ -17,9 +18,14 @@
     "eslint": "^6.8.0",
     "jasmine": "^3.5.0",
     "mockery": "^2.1.0",
+    "prettier": "^1.19.1",
     "sinon": "^8.1.1"
   },
   "dependencies": {
     "@abandonware/noble": "^1.9.2-5"
+  },
+  "prettier": {
+    "printWidth": 120,
+    "trailingComma": "all"
   }
 }
