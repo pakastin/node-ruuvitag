@@ -1,11 +1,11 @@
 {
-  "name": "@pakastin/node-ruuvitag",
+  "name": "node-ruuvitag",
   "version": "4.1.1",
   "engines": {
     "node": ">6.0.0"
   },
   "repository": "https://github.com/pakastin/node-ruuvitag",
-  "description": "Read data from  RuuviTag weather station",
+  "description": "Read data from RuuviTag weather station",
   "main": "ruuvi.js",
   "scripts": {
     "test": "gulp test"

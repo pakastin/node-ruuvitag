@@ -48,7 +48,10 @@ Is an ```eventEmitter``` .
 
 **Properties:**
 
-```id```: id of beacon
+* ```id```: id of beacon
+* ```address```: address of beacon
+* ```addressType```: addressType of address
+* ```connectable```: flag if beacon is connectable
 
 **Events:**
 
@@ -66,6 +69,9 @@ following properties (depending on data format):
 * ```accelerationX```
 * ```accelerationY```
 * ```accelerationZ```
+* ```txPower``` -- in data format 5
+* ```movementCounter``` -- in data format 5
+* ```measurementSequenceNumber``` -- in data format 5
 
 See [data formats](https://github.com/ruuvi/ruuvi-sensor-protocols) for
 info about RuuviTag sensor values.

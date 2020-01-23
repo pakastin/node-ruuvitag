@@ -9,9 +9,9 @@ const generateRandomUrl = () => {
 const manufacturerData = Buffer.from('990403501854c2c60042ffe503ef0b8300000000', 'hex');
 
 const ruuviTags = [
-  { 'id': 'c283c5a63ccb', dataFormat: 3, manufacturerData: manufacturerData },
-  { 'id': 'fbf6df2d6abe', dataFormat: 4 },
-  { 'id': 'fbf6df2d6abe', dataFormat: 4 }
+  { 'id': 'c283c5a63ccb', 'address': 'c2:83:c5:a6:3c:cb', 'addressType': 'random', 'connectable': false, dataFormat: 3, manufacturerData: manufacturerData },
+  { 'id': 'fbf6df2d6abe', 'address': 'fb:f6:df:2d:6a:be', 'addressType': 'random', 'connectable': false, dataFormat: 4 },
+  { 'id': 'fbf6df2d6abe', 'address': 'fb:f6:df:2d:6a:be', 'addressType': 'random', 'connectable': false, dataFormat: 4 }
 ];
 
 class NobleMock extends EventEmitter {
