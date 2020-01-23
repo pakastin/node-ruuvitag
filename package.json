@@ -17,11 +17,11 @@
     "gulp-jasmine": "^4.0.0",
     "gulp-jshint": "^2.1.0",
     "gulp-plumber": "^1.2.1",
-    "jshint": "^2.10.2",
+    "jshint": "^2.11.0",
     "mockery": "^2.1.0",
-    "sinon": "^7.4.1"
+    "sinon": "^8.1.1"
   },
   "dependencies": {
-    "@abandonware/noble": "~1.9.2-3"
+    "@abandonware/noble": "~1.9.2-5"
   }
 }
