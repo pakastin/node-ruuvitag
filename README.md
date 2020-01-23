@@ -8,7 +8,7 @@ Tested on Raspberry Pi 3. Depends on [noble](https://github.com/sandeepmistry/no
 ### Installation
 
 ```
-npm install pakastin/node-ruuvitag --production
+npm install pakastin/node-ruuvitag
 ```
 
 
