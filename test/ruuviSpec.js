@@ -77,6 +77,9 @@ describe('module ruuvi', () => {
       ruuvi.on('found', (data) => {
         count++;
         expect("id" in data).toBeTruthy();
+        expect("address" in data).toBeTruthy();
+        expect("addressType" in data).toBeTruthy();
+        expect("connectable" in data).toBeTruthy();
         expect(data instanceof EventEmitter).toBeTruthy();
       });
 
@@ -107,8 +110,11 @@ describe('module ruuvi', () => {
 
     describe('instantiated object', () => {
 
-      it('should have property "id"', () => {
+      it('should have properties "id", "address", "addressType", "connectable"', () => {
         expect("id" in tags[0]).toBeTruthy();
+        expect("address" in tags[0]).toBeTruthy();
+        expect("addressType" in tags[0]).toBeTruthy();
+        expect("connectable" in tags[0]).toBeTruthy();
       });
 
       it('should emit "updated" when ruuvitag signal is received', (done) => {

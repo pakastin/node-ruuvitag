@@ -48,7 +48,10 @@ Is an ```eventEmitter``` .
 
 **Properties:**
 
-```id```: id of beacon
+* ```id```: id of beacon
+* ```address```: address of beacon
+* ```addressType```: addressType of address
+* ```connectable```: flag if beacon is connectable
 
 **Events:**
 
