@@ -16,6 +16,7 @@ describe("module ruuvi", () => {
 
   beforeEach(() => {
     mockery.enable();
+    mockery.registerMock("@abandonware/noble", nobleMock.mock);
     mockery.registerMock("noble", nobleMock.mock);
     mockery.registerAllowable("../ruuvi");
     mockery.registerAllowable("./lib/parse");
