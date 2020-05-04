@@ -18,12 +18,11 @@
     "eslint": "^6.8.0",
     "jasmine": "^3.5.0",
     "mockery": "^2.1.0",
+    "prettier": "^1.19.1",
     "sinon": "^9.0.2"
   },
   "dependencies": {
-    "@abandonware/noble": "^1.9.2-8",
-    "prettier": "^1.19.1",
-    "sinon": "^9.0.1"
+    "@abandonware/noble": "^1.9.2-8"
   },
   "prettier": {
     "printWidth": 120,
