@@ -12,7 +12,7 @@ module.exports = {
       humidity: buffer[1] / 2,
       temperature: unSign(buffer[2]),
       pressure: (buffer[4] * 256 + buffer[5] + 50000) / 100,
-      eddystoneId: buffer.length === 7 ? buffer[6] : undefined
+      eddystoneId: buffer.length === 7 ? buffer[6] : undefined,
     };
-  }
+  },
 };
