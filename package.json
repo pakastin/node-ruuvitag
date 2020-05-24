@@ -15,14 +15,14 @@
   "author": "",
   "license": "BSD-3",
   "devDependencies": {
-    "eslint": "^6.8.0",
+    "eslint": "^7.1.0",
     "jasmine": "^3.5.0",
     "mockery": "^2.1.0",
-    "prettier": "^1.19.1",
+    "prettier": "^2.0.5",
     "sinon": "^9.0.2"
   },
   "dependencies": {
-    "@abandonware/noble": "^1.9.2-8"
+    "@abandonware/noble": "^1.9.2-9"
   },
   "prettier": {
     "printWidth": 120,
