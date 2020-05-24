@@ -13,7 +13,7 @@ npm install node-ruuvitag
 
 
 ### Usage example
-```
+```js
 const ruuvi = require('node-ruuvitag');
 
 ruuvi.on('found', tag => {
