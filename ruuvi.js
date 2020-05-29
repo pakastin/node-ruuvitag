@@ -20,7 +20,6 @@ class Ruuvi extends EventEmitter {
     this._tagLookup = {};
     this.scanning = false;
     this.listenerAttached = false;
-    this.scanning = false;
 
     const registerTag = tag => {
       this._foundTags.push(tag);
@@ -113,6 +112,7 @@ class Ruuvi extends EventEmitter {
       } else {
         this.stop();
       }
+      this.emit('stateChange', state);
     });
 
     // start scanning
