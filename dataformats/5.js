@@ -27,7 +27,14 @@ const parseRawRuuvi = function(data) {
   robject.txPower = (powerInfo & 0b11111) * 2 - 40;
   robject.movementCounter = data[17] & 0xff;
   robject.measurementSequenceNumber = ((data[18] & 0xff) << 8) | (data[19] & 0xff);
-
+  robject.mac = [
+    data[20].toString(16).toUpperCase(),
+    data[21].toString(16).toUpperCase(),
+    data[22].toString(16).toUpperCase(),
+    data[23].toString(16).toUpperCase(),
+    data[24].toString(16).toUpperCase(),
+    data[25].toString(16).toUpperCase()
+  ].join(':');
   return robject;
 };
 
