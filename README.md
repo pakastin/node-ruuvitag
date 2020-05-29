@@ -24,12 +24,18 @@ ruuvi.on('found', tag => {
   });
 });
 
+ruuvi.on('warning', message => {
+  console.error(new Error(message));
+});
+
 ```
 
 ### Events
-
+#### found
 Module ```ruuvi``` emits a ```found``` event, when a new RuuviTag
 is discovered. Event's payload is a ```ruuviTag``` object (see below)
+### warning
+Module relays noble's [```warning``` events](https://github.com/noble/noble#warnings) (see below)
 
 ### API
 
