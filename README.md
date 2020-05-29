@@ -24,6 +24,10 @@ ruuvi.on('found', tag => {
   });
 });
 
+ruuvi.on('warning', message => {
+  console.error(new Error(message));
+});
+
 ```
 
 ### Events
