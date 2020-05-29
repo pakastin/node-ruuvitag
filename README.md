@@ -79,6 +79,7 @@ following properties (depending on data format):
 * ```movementCounter``` -- in data format 5
 * ```measurementSequenceNumber``` -- in data format 5
 * ```mac``` -- in data format 5
+
 See [data formats](https://github.com/ruuvi/ruuvi-sensor-protocols) for
 info about RuuviTag sensor values.
 
