@@ -20,6 +20,7 @@ class Ruuvi extends EventEmitter {
     this._tagLookup = {};
     this.scanning = false;
     this.listenerAttached = false;
+    this.scanning = false;
 
     const registerTag = tag => {
       this._foundTags.push(tag);
@@ -106,14 +107,17 @@ class Ruuvi extends EventEmitter {
 
     noble.on('discover', onDiscover);
     noble.on('warning', onWarning);
+    noble.on('stateChange', (state) => {
+      if (state === 'poweredOn') {
+        this.start();
+      } else {
+        this.stop();
+      }
+    });
 
     // start scanning
     if (noble.state === 'poweredOn') {
-      noble.startScanning([], true);
-    } else {
-      noble.once('stateChange', () => {
-        noble.startScanning([], true);
-      });
+      this.start();
     }
   }
 
@@ -126,6 +130,20 @@ class Ruuvi extends EventEmitter {
         reject(new Error('No beacons found'));
       }, 5000);
     });
+  }
+
+  start () {
+    if (!this.scanning) {
+      this.scanning = true;
+      noble.startScanning([], true);
+    }
+  }
+
+  stop () {
+    if (this.scanning) {
+      this.scanning = false;
+      noble.stopScanning();
+    }
   }
 }
 
