@@ -1,5 +1,5 @@
-const parseRawRuuvi = function(data) {
-  let robject = {};
+const parseRawRuuvi = function (data) {
+  const robject = {};
 
   let temperature = (data[3] << 8) | (data[4] & 0xff);
   if (temperature > 32767) {
@@ -11,33 +11,37 @@ const parseRawRuuvi = function(data) {
   robject.pressure = (((data[7] & 0xff) << 8) | (data[8] & 0xff)) + 50000;
 
   let accelerationX = (data[9] << 8) | (data[10] & 0xff);
-  if (accelerationX > 32767) accelerationX -= 65536; //two's complement
+  if (accelerationX > 32767) accelerationX -= 65536; // two's complement
   robject.accelerationX = accelerationX;
 
   let accelerationY = (data[11] << 8) | (data[12] & 0xff);
-  if (accelerationY > 32767) accelerationY -= 65536; //two's complement
+  if (accelerationY > 32767) accelerationY -= 65536; // two's complement
   robject.accelerationY = accelerationY;
 
   let accelerationZ = (data[13] << 8) | (data[14] & 0xff);
-  if (accelerationZ > 32767) accelerationZ -= 65536; //two's complement
+  if (accelerationZ > 32767) accelerationZ -= 65536; // two's complement
   robject.accelerationZ = accelerationZ;
 
-  let powerInfo = ((data[15] & 0xff) << 8) | (data[16] & 0xff);
+  const powerInfo = ((data[15] & 0xff) << 8) | (data[16] & 0xff);
   robject.battery = (powerInfo >>> 5) + 1600;
   robject.txPower = (powerInfo & 0b11111) * 2 - 40;
   robject.movementCounter = data[17] & 0xff;
   robject.measurementSequenceNumber = ((data[18] & 0xff) << 8) | (data[19] & 0xff);
   robject.mac = [
-    data[20].toString(16).toUpperCase(),
-    data[21].toString(16).toUpperCase(),
-    data[22].toString(16).toUpperCase(),
-    data[23].toString(16).toUpperCase(),
-    data[24].toString(16).toUpperCase(),
-    data[25].toString(16).toUpperCase()
+    int2Hex(data[20]),
+    int2Hex(data[21]),
+    int2Hex(data[22]),
+    int2Hex(data[23]),
+    int2Hex(data[24]),
+    int2Hex(data[25])
   ].join(':');
   return robject;
 };
 
 module.exports = {
-  parse: buffer => parseRawRuuvi(buffer),
+  parse: buffer => parseRawRuuvi(buffer)
 };
+
+function int2Hex (str) {
+  return ('0' + str.toString(16).toUpperCase()).slice(-2);
+}
