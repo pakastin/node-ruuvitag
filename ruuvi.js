@@ -1,4 +1,3 @@
-const noble = require('@abandonware/noble');
 const EventEmitter = require('events').EventEmitter;
 const parser = require('./lib/parse');
 const parseEddystoneBeacon = require('./lib/eddystone');
@@ -14,8 +13,9 @@ class RuuviTag extends EventEmitter {
 }
 
 class Ruuvi extends EventEmitter {
-  constructor () {
+  constructor (adapter) {
     super();
+    this._adapter = adapter;
     this._foundTags = []; // this array will contain registered RuuviTags
     this._tagLookup = {};
     this.scanning = false;
@@ -26,11 +26,11 @@ class Ruuvi extends EventEmitter {
       this._tagLookup[tag.id] = tag;
     };
 
-    const onWarning = message => {
-      this.emit('warning', message);
-    };
+    this._adapter.on('warning', warning => {
+      console.error(new Error(warning));
+    });
 
-    const onDiscover = peripheral => {
+    this._adapter.on('discover', peripheral => {
       let newRuuviTag;
 
       // Scan for new RuuviTags, add them to the array of found tags
@@ -102,23 +102,7 @@ class Ruuvi extends EventEmitter {
           });
         }
       }
-    };
-
-    noble.on('discover', onDiscover);
-    noble.on('warning', onWarning);
-    noble.on('stateChange', (state) => {
-      if (state === 'poweredOn') {
-        this.start();
-      } else {
-        this.stop();
-      }
-      this.emit('stateChange', state);
     });
-
-    // start scanning
-    if (noble.state === 'poweredOn') {
-      this.start();
-    }
   }
 
   findTags () {
@@ -135,16 +119,14 @@ class Ruuvi extends EventEmitter {
   start () {
     if (!this.scanning) {
       this.scanning = true;
-      noble.startScanning([], true);
     }
   }
 
   stop () {
     if (this.scanning) {
       this.scanning = false;
-      noble.stopScanning();
     }
   }
 }
 
-module.exports = new Ruuvi();
+module.exports = Ruuvi;
