@@ -6,7 +6,7 @@
   },
   "repository": "https://github.com/pakastin/node-ruuvitag",
   "description": "Read data from RuuviTag weather station",
-  "main": "ruuvi.js",
+  "main": "index.js",
   "scripts": {
     "test": "jasmine test/*Spec.js",
     "lint": "eslint '**/*.js'",
@@ -15,7 +15,7 @@
   "author": "",
   "license": "BSD-3",
   "devDependencies": {
-    "eslint": "^7.1.0",
+    "eslint": "^7.4.0",
     "jasmine": "^3.5.0",
     "mockery": "^2.1.0",
     "prettier": "^2.0.5",
