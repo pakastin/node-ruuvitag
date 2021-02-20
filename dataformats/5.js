@@ -1,5 +1,5 @@
-const parseRawRuuvi = function(data) {
-    let robject = {};
+const parseRawRuuvi = function (data) {
+  const robject = {};
 
 /***************************************************************************
  * Modifications by pbfulmar:
@@ -142,9 +142,22 @@ const parseRawRuuvi = function(data) {
 	robject.measurementSequenceNumber = measurementSequenceNumber;
     }
 
+    robject.mac = [
+	int2Hex(data[20]),
+	int2Hex(data[21]),
+	int2Hex(data[22]),
+	int2Hex(data[23]),
+	int2Hex(data[24]),
+	int2Hex(data[25])
+    ].join(':');
+
     return robject;
 };
 
 module.exports = {
-  parse: buffer => parseRawRuuvi(buffer),
+  parse: buffer => parseRawRuuvi(buffer)
 };
+
+function int2Hex (str) {
+  return ('0' + str.toString(16).toUpperCase()).slice(-2);
+}

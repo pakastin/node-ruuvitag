@@ -1,12 +1,12 @@
 {
   "name": "node-ruuvitag",
-  "version": "4.2.0",
+  "version": "4.6.1",
   "engines": {
     "node": ">6.0.0"
   },
   "repository": "https://github.com/pakastin/node-ruuvitag",
   "description": "Read data from RuuviTag weather station",
-  "main": "ruuvi.js",
+  "main": "index.js",
   "scripts": {
     "test": "jasmine test/*Spec.js",
     "lint": "eslint '**/*.js'",
@@ -15,14 +15,14 @@
   "author": "",
   "license": "BSD-3",
   "devDependencies": {
-    "eslint": "^6.8.0",
-    "jasmine": "^3.6.3",
+    "eslint": "^7.4.0",
+    "jasmine": "^3.5.0",
     "mockery": "^2.1.0",
-    "prettier": "^1.19.1",
-    "sinon": "^8.1.1"
+    "prettier": "^2.0.5",
+    "sinon": "^9.0.2"
   },
   "dependencies": {
-    "@abandonware/noble": "^1.9.2-10"
+    "@abandonware/noble": "^1.9.2-9"
   },
   "prettier": {
     "printWidth": 120,
