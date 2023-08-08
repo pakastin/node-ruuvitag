@@ -2,7 +2,9 @@
 // which is licenced under BSD-3
 // Credits to GitHub user ojousima
 
-const parseRawRuuvi = function(manufacturerDataString) {
+// type RuuviData = { humidity: number, temperature: number, pressure: number, accelerationX: number, accelerationY: number, accelerationZ: number, battery: number }
+
+const parseRawRuuvi = function (manufacturerDataString: string) {
   let humidityStart = 6;
   let humidityEnd = 8;
   let temperatureStart = 8;
@@ -18,12 +20,7 @@ const parseRawRuuvi = function(manufacturerDataString) {
   let batteryStart = 28;
   let batteryEnd = 32;
 
-  let robject = {};
-
-  let humidity = manufacturerDataString.substring(humidityStart, humidityEnd);
-  humidity = parseInt(humidity, 16);
-  humidity /= 2; //scale
-  robject.humidity = humidity;
+  const humidity = parseInt(manufacturerDataString.substring(humidityStart, humidityEnd), 16) / 2;
 
   let temperatureString = manufacturerDataString.substring(temperatureStart, temperatureEnd);
   let temperature = parseInt(temperatureString.substring(0, 2), 16); //Full degrees
@@ -33,11 +30,10 @@ const parseRawRuuvi = function(manufacturerDataString) {
     temperature = temperature - 128;
     temperature = 0 - temperature;
   }
-  robject.temperature = +temperature.toFixed(2); // Round to 2 decimals, format as a number
+  temperature = +temperature.toFixed(2); // Round to 2 decimals, format as a number
 
   let pressure = parseInt(manufacturerDataString.substring(pressureStart, pressureEnd), 16); // uint16_t pascals
   pressure += 50000; //Ruuvi format
-  robject.pressure = pressure;
 
   let accelerationX = parseInt(manufacturerDataString.substring(accelerationXStart, accelerationXEnd), 16); // milli-g
   if (accelerationX > 32767) {
@@ -54,16 +50,10 @@ const parseRawRuuvi = function(manufacturerDataString) {
     accelerationZ -= 65536;
   } //two's complement
 
-  robject.accelerationX = accelerationX;
-  robject.accelerationY = accelerationY;
-  robject.accelerationZ = accelerationZ;
+  const battery = parseInt(manufacturerDataString.substring(batteryStart, batteryEnd), 16); // milli-g
 
-  let battery = parseInt(manufacturerDataString.substring(batteryStart, batteryEnd), 16); // milli-g
-  robject.battery = battery;
-
-  return robject;
+  return { humidity, temperature, pressure, accelerationX, accelerationY, accelerationZ, battery };
 };
 
-module.exports = {
-  parse: buffer => parseRawRuuvi(buffer.toString("hex")),
-};
+
+export const parse = (buffer: Buffer) => parseRawRuuvi(buffer.toString("hex"))
