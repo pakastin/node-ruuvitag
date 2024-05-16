@@ -19,7 +19,7 @@
     "jasmine": "^5.1.0",
     "mockery": "^2.1.0",
     "prettier": "^3.2.4",
-    "sinon": "^17.0.1"
+    "sinon": "^18.0.0"
   },
   "dependencies": {
     "@abandonware/noble": "^1.9.2-23"
